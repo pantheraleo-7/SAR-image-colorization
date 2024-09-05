@@ -42,7 +42,7 @@ for epoch in range(1, num_epochs+1):
 
         train_loss += loss.item()*BATCH_SIZE
 
-    train_loss /= len(train_loader.dataset)
+    train_loss /= len(train_dataset)
 
     model.eval()
 
@@ -55,7 +55,7 @@ for epoch in range(1, num_epochs+1):
 
             valid_loss += loss.item()*BATCH_SIZE
 
-    valid_loss = valid_loss/len(valid_loader.dataset)
+    valid_loss /= len(valid_dataset)
 
     print(f'Epoch {epoch}/{num_epochs} | Train loss: {train_loss:.4f} | Validation loss: {valid_loss:.4f}')
 
@@ -64,8 +64,8 @@ torch.save({
     'epoch': num_epochs,
     'model_state_dict': model.state_dict(),
     'optimizer_state_dict': optimizer.state_dict(),
-    'train_loss': train_loss,
-    'valid_loss': valid_loss,
+    'train_loss': train_loss, # type: ignore
+    'valid_loss': valid_loss, # type: ignore
 }, 'unet.pth')
 
 print(f'Model saved after {num_epochs} epochs')

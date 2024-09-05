@@ -63,7 +63,7 @@ for epoch in range(1, num_epochs+1):
 
         if i%10==0: print(f'Batch {i}/{len(train_loader)} | D loss: {loss_d:.4f} | G loss: {loss_g:.4f}')
 
-    train_loss /= len(train_loader.dataset)
+    train_loss /= len(train_dataset)
 
     generator.eval()
 
@@ -76,7 +76,7 @@ for epoch in range(1, num_epochs+1):
 
             valid_loss += loss.item()*BATCH_SIZE
 
-    valid_loss /= len(valid_loader.dataset)
+    valid_loss /= len(valid_dataset)
 
     print(f'Epoch {epoch}/{num_epochs} | Train loss: {train_loss:.4f} | Validation loss: {valid_loss:.4f}')
 
@@ -85,8 +85,8 @@ torch.save({
     'epoch': num_epochs,
     'model_state_dict': generator.state_dict(),
     'optimizer_state_dict': optimizer_g.state_dict(),
-    'train_loss': train_loss,
-    'valid_loss': valid_loss,
+    'train_loss': train_loss, # type: ignore
+    'valid_loss': valid_loss, # type: ignore
 }, 'gan.pth')
 
 print(f'Model saved after {num_epochs} epochs')
