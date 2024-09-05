@@ -43,7 +43,7 @@ plt.title('Original Image (SAR)')
 plt.axis('off')
 
 plt.subplot(1, 2, 2)
-plt.imshow((predicted_image + 1) / 2)
+plt.imshow((predicted_image+1)/2)
 plt.title('Predicted Image (Optical)')
 plt.axis('off')
 

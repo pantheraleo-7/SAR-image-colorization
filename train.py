@@ -26,20 +26,19 @@ criterion = nn.BCEWithLogitsLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 num_epochs = 10
-for epoch in range(num_epochs):
+for epoch in range(1, num_epochs+1):
     model.train()
+
     train_loss = 0.0
-
-    for images, masks in train_loader:
-        images, masks = images.to(device), masks.to(device)
-
+    for sar_img, opt_img in train_loader:
+        sar_img, opt_img = sar_img.to(device), opt_img.to(device)
         optimizer.zero_grad()
-        outputs = model(images)
-        loss = criterion(outputs, masks)
+        color_img = model(sar_img)
+        loss = criterion(color_img, opt_img)
         loss.backward()
         optimizer.step()
 
-        train_loss += loss.item()*images.size(0)
+        train_loss += loss.item()*sar_img.size(0)
 
     train_loss = train_loss/len(train_loader.dataset)
 
@@ -47,15 +46,16 @@ for epoch in range(num_epochs):
 
     valid_loss = 0.0
     with torch.no_grad():
-        for images, masks in valid_loader:
-            images, masks = images.to(device), masks.to(device)
-            outputs = model(images)
-            loss = criterion(outputs, masks)
-            valid_loss += loss.item()*images.size(0)
+        for sar_img, opt_img in valid_loader:
+            sar_img, opt_img = sar_img.to(device), opt_img.to(device)
+            color_img = model(sar_img)
+            loss = criterion(color_img, opt_img)
+
+            valid_loss += loss.item()*sar_img.size(0)
 
     valid_loss = valid_loss/len(valid_loader.dataset)
 
-    print(f'Epoch {epoch+1}/{num_epochs} | Train_loss: {train_loss:.4f} | Validation loss: {valid_loss:.4f}')
+    print(f'Epoch {epoch}/{num_epochs} | Train_loss: {train_loss:.4f} | Validation loss: {valid_loss:.4f}')
 
 # Save the model after training
 torch.save({
