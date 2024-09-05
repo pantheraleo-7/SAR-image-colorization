@@ -28,6 +28,7 @@ criterion = nn.BCEWithLogitsLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 num_epochs = 10
+train_loss = valid_loss = None
 for epoch in range(1, num_epochs+1):
     model.train()
 
@@ -42,7 +43,7 @@ for epoch in range(1, num_epochs+1):
 
         train_loss += loss.item()*BATCH_SIZE
 
-    train_loss /= len(train_loader.dataset)
+    train_loss /= len(train_dataset)
 
     model.eval()
 
@@ -55,7 +56,7 @@ for epoch in range(1, num_epochs+1):
 
             valid_loss += loss.item()*BATCH_SIZE
 
-    valid_loss = valid_loss/len(valid_loader.dataset)
+    valid_loss /= len(valid_dataset)
 
     print(f'Epoch {epoch}/{num_epochs} | Train loss: {train_loss:.4f} | Validation loss: {valid_loss:.4f}')
 
