@@ -26,11 +26,11 @@ class SAROpticalDataset(Dataset):
 
     def __getitem__(self, idx):
         s1_path, s2_path = self.data_pairs[idx]
-        s1_image = Image.open(s1_path).convert("L")
-        s2_image = Image.open(s2_path).convert("RGB")
+        s1_img = Image.open(s1_path).convert("L")
+        s2_img = Image.open(s2_path).convert("RGB")
 
         if self.transform:
-            s1_image = self.transform(s1_image)
-            s2_image = self.transform(s2_image)
+            s1_img = self.transform(s1_img)
+            s2_img = self.transform(s2_img)
 
-        return s1_image, s2_image
+        return s1_img, s2_img

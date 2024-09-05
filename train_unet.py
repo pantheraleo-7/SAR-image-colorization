@@ -4,24 +4,26 @@ from torch.utils.data import DataLoader, random_split
 from torchvision import transforms
 
 from dataset import SAROpticalDataset
-from model import UNet
+from models import UNet
 
 transform = transforms.Compose([
-    transforms.Resize((256, 256)),  # Adjust to your model's input size
-    transforms.ToTensor()
+    transforms.Resize((256, 256)),
+    transforms.ToTensor(),
+    # transforms.Normalize((0.5,), (0.5,))
 ])
 
-data = SAROpticalDataset(root_dir="/dataset/", transform=transform)
+data = SAROpticalDataset(root_dir='/dataset/', transform=transform)
 
-train_dataset, val_dataset = random_split(data, [0.8, 0.2])
+train_dataset, valid_dataset = random_split(data, [0.8, 0.2])
 
-train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
-valid_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)
+BATCH_SIZE = 16
+train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+valid_loader = DataLoader(valid_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(device)
 
-model = UNet(n_class=3).to(device)
+model = UNet().to(device)
 criterion = nn.BCEWithLogitsLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
@@ -38,9 +40,9 @@ for epoch in range(1, num_epochs+1):
         loss.backward()
         optimizer.step()
 
-        train_loss += loss.item()*sar_img.size(0)
+        train_loss += loss.item()*BATCH_SIZE
 
-    train_loss = train_loss/len(train_loader.dataset)
+    train_loss /= len(train_loader.dataset)
 
     model.eval()
 
@@ -51,11 +53,11 @@ for epoch in range(1, num_epochs+1):
             color_img = model(sar_img)
             loss = criterion(color_img, opt_img)
 
-            valid_loss += loss.item()*sar_img.size(0)
+            valid_loss += loss.item()*BATCH_SIZE
 
     valid_loss = valid_loss/len(valid_loader.dataset)
 
-    print(f'Epoch {epoch}/{num_epochs} | Train_loss: {train_loss:.4f} | Validation loss: {valid_loss:.4f}')
+    print(f'Epoch {epoch}/{num_epochs} | Train loss: {train_loss:.4f} | Validation loss: {valid_loss:.4f}')
 
 # Save the model after training
 torch.save({
@@ -64,6 +66,6 @@ torch.save({
     'optimizer_state_dict': optimizer.state_dict(),
     'train_loss': train_loss,
     'valid_loss': valid_loss,
-}, 'final_model.pth')
+}, 'unet.pth')
 
 print(f'Model saved after {num_epochs} epochs')

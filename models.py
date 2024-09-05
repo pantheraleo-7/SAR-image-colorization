@@ -3,7 +3,7 @@ import torch.nn.functional as F
 from torch import nn
 
 class UNet(nn.Module):
-    def __init__(self, n_class):
+    def __init__(self, out_channels=3):
         super().__init__()
 
         # Encoder
@@ -44,7 +44,7 @@ class UNet(nn.Module):
         self.d42 = nn.Conv2d(16, 16, kernel_size=3, padding=1)
 
         # Output layer
-        self.outconv = nn.Conv2d(16, n_class, kernel_size=1)
+        self.outconv = nn.Conv2d(16, out_channels, kernel_size=1)
 
     def forward(self, x):
         # Encoder
@@ -90,12 +90,13 @@ class UNet(nn.Module):
 
         # Output layer
         out = self.outconv(xd42)
+        out = F.tanh(out)
 
         return out
 
-# Generator
+# Generator for cGAN
 class Generator(nn.Module):
-    def __init__(self):
+    def __init__(self, out_channels=3):
         super().__init__()
 
         self.down1 = self.conv_block(1, 64, norm=False)
@@ -110,7 +111,7 @@ class Generator(nn.Module):
         self.up3 = self.conv_block(256, 64, transpose=True)
 
         self.final = nn.Sequential(
-            nn.ConvTranspose2d(128, 3, kernel_size=4, stride=2, padding=1),
+            nn.ConvTranspose2d(128, out_channels, kernel_size=4, stride=2, padding=1),
             nn.Tanh()
         )
 
@@ -138,15 +139,16 @@ class Generator(nn.Module):
         u1 = self.up1(self.upsample(d4))
         u2 = self.up2(self.upsample(torch.cat([u1, d3], 1)))
         u3 = self.up3(self.upsample(torch.cat([u2, d2], 1)))
+
         return self.final(torch.cat([u3, d1], 1))
 
-# Discriminator
+# Discriminator for cGAN
 class Discriminator(nn.Module):
-    def __init__(self):
+    def __init__(self, out_channels=3):
         super().__init__()
 
         self.model = nn.Sequential(
-            self.conv_block(4, 64, norm=False),
+            self.conv_block(out_channels+1, 64, norm=False),
             self.conv_block(64, 128),
             self.conv_block(128, 256),
             self.conv_block(256, 512),
