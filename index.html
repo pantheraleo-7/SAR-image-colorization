@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SAR Image Colorization</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                text-align: center;
+            }
+            #uploadForm {
+                margin-bottom: 20px;
+            }
+            #result {
+                display: flex;
+                justify-content: space-around;
+            }
+            .image-container {
+                max-width: 45%;
+            }
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>SAR Image Colorization</h1>
+        <form id="uploadForm">
+            <input type="file" id="imageInput" accept="image/*" />
+            <button type="submit">Colorize</button>
+        </form>
+        <div id="result">
+            <div class="image-container">
+                <h3>Original Image</h3>
+                <img id="originalImage" src="" alt="Original Image" />
+            </div>
+            <div class="image-container">
+                <h3>Colorized Image</h3>
+                <img id="colorizedImage" src="" alt="Colorized Image" />
+            </div>
+        </div>
+
+        <script>
+            const form = document.getElementById("uploadForm");
+            const imageInput = document.getElementById("imageInput");
+            const originalImage = document.getElementById("originalImage");
+            const colorizedImage = document.getElementById("colorizedImage");
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData();
+                formData.append("file", imageInput.files[0]);
+
+                try {
+                    const response = await fetch("http://localhost:8000/", {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        const colorizedImageUrl = URL.createObjectURL(blob);
+                        colorizedImage.src = colorizedImageUrl;
+
+                        const originalImageUrl = URL.createObjectURL(
+                            imageInput.files[0],
+                        );
+                        originalImage.src = originalImageUrl;
+                    } else {
+                        console.error("Error:", response.statusText);
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                }
+            });
+        </script>
+    </body>
+</html>
