@@ -20,7 +20,7 @@ BATCH_SIZE = 16
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 valid_loader = DataLoader(valid_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else ('mps' if torch.backends.mps.is_available() else 'cpu'))
 print(device)
 
 generator = Generator().to(device)
