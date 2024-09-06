@@ -3,7 +3,6 @@ import torch
 from PIL import Image
 from torchvision import transforms
 
-from dataset import SAROpticalDataset
 from models import *
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

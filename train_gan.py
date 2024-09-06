@@ -12,7 +12,7 @@ transform = transforms.Compose([
     # transforms.Normalize((0.5,), (0.5,))
 ])
 
-data = SAROpticalDataset(root_dir='/dataset/', transform=transform)
+data = SAROpticalDataset(root_dir='~/Downloads/dataset', transform=transform)
 
 train_dataset, valid_dataset = random_split(data, [0.8, 0.2])
 
