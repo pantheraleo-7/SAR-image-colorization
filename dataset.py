@@ -11,20 +11,15 @@ class SAROpticalDataset(Dataset):
 
         for item in self.root_dir.iterdir():
             if not item.is_dir():
-                print(f'Skipped "{item}": not a directory')
+                print(f'Skipped "{item.name}": not a directory')
                 continue
 
-            s1_imgs, s2_imgs = [], []
-            category_dir = self.root_dir/item
-            for s1 in category_dir.glob('s1*'):
-                s1_dir = category_dir/s1
-                s1_imgs.extend(s1_dir/img for img in s1_dir.glob('*.png'))
-            for s2 in category_dir.glob('s2*'):
-                s2_dir = category_dir/s2
-                s2_imgs.extend(s2_dir/img for img in s2_dir.glob('*.png'))
+            s1_imgs = [img for s1 in item.glob('s1*') for img in s1.glob('*.png')]
+            s2_imgs = [img for s2 in item.glob('s2*') for img in s2.glob('*.png')]
 
-            s1_imgs = sorted(s1_imgs, key=lambda path: path.stem)
-            s2_imgs = sorted(s2_imgs, key=lambda path: path.stem)
+            s1_imgs = sorted(s1_imgs, key = lambda path: path.stem)
+            s2_imgs = sorted(s2_imgs, key = lambda path: path.stem)
+
             self.data_pairs.extend(zip(s1_imgs, s2_imgs))
 
     def __len__(self):
@@ -35,7 +30,7 @@ class SAROpticalDataset(Dataset):
         s1_img = Image.open(s1_img_path).convert('L')
         s2_img = Image.open(s2_img_path).convert('RGB')
 
-        if self.transform:
+        if self.transform is not None:
             s1_img = self.transform(s1_img)
             s2_img = self.transform(s2_img)
 
