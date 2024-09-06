@@ -3,15 +3,13 @@ import torch
 from PIL import Image
 from torchvision import transforms
 
-from models import *
+from models import Generator
 
 device = torch.device('cuda' if torch.cuda.is_available() else ('mps' if torch.backends.mps.is_available() else 'cpu'))
+print(device)
 
-# Choose model to test (unet or cgan)
-path = 'unet.pth'
-model = UNet().to(device) # Change `out_channels` parameter for non 3-channel images
-
-checkpoint = torch.load(path, map_location=device)
+checkpoint = torch.load('gan.pth', map_location=device)
+model = Generator().to(device) # Change `out_channels` parameter for non 3-channel images
 model.load_state_dict(checkpoint['model_state_dict'])
 model.eval()
 
@@ -26,11 +24,11 @@ def color_img(img, model, transform, device):
 
 transform = transforms.Compose([
     transforms.Resize((256, 256)),
-    transforms.ToTensor()
+    transforms.ToTensor(),
+    # transforms.Normalize((0.5,), (0.5,))
 ])
 
-test_img_path = 'random.png'
-test_img = Image.open(test_img_path).convert('L')
+test_img = Image.open('random.png').convert('L')
 pred_img = color_img(test_img, model, transform, device)
 
 # Visualize the result
