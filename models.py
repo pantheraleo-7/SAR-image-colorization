@@ -104,8 +104,6 @@ class Generator(nn.Module):
         self.down3 = self.conv_block(128, 256)
         self.down4 = self.conv_block(256, 512)
 
-        self.upsample = nn.Upsample(scale_factor=2)
-
         self.up1 = self.conv_block(512, 256, transpose=True)
         self.up2 = self.conv_block(512, 128, transpose=True)
         self.up3 = self.conv_block(256, 64, transpose=True)
@@ -136,9 +134,9 @@ class Generator(nn.Module):
         d3 = self.down3(d2)
         d4 = self.down4(d3)
 
-        u1 = self.up1(self.upsample(d4))
-        u2 = self.up2(self.upsample(torch.cat([u1, d3], 1)))
-        u3 = self.up3(self.upsample(torch.cat([u2, d2], 1)))
+        u1 = self.up1(d4)
+        u2 = self.up2(torch.cat([u1, d3], 1))
+        u3 = self.up3(torch.cat([u2, d2], 1))
 
         return self.final(torch.cat([u3, d1], 1))
 

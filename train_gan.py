@@ -40,8 +40,8 @@ for epoch in range(1, num_epochs+1):
 
     train_loss = 0.0
     for i, (sar_img, opt_img) in enumerate(train_loader, start=1):
-        real = torch.ones(BATCH_SIZE, 1, 1, 1).to(device)
-        fake = torch.zeros(BATCH_SIZE, 1, 1, 1).to(device)
+        real = torch.ones(BATCH_SIZE, 1, 13, 13).to(device)
+        fake = torch.zeros(BATCH_SIZE, 1, 13, 13).to(device)
         sar_img, opt_img = sar_img.to(device), opt_img.to(device)
 
         # Train Generator
@@ -62,7 +62,7 @@ for epoch in range(1, num_epochs+1):
 
         train_loss += (loss_g.item()+loss_d.item())*BATCH_SIZE
 
-        if i%10==0: print(f'Batch {i}/{len(train_loader)} | D loss: {loss_d:.4f} | G loss: {loss_g:.4f}')
+        if i%10==0: print(f'Batch {i}/{len(train_loader)} | G loss: {loss_g:.4f} | D loss: {loss_d:.4f}')
 
     train_loss /= len(train_dataset)
 
