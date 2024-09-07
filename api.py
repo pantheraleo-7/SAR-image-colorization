@@ -3,6 +3,7 @@ import io
 import numpy as np
 import torch
 from fastapi import FastAPI, Request, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, FileResponse
 from PIL import Image
 from torchvision import transforms
@@ -10,6 +11,14 @@ from torchvision import transforms
 from models import Generator
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=['post'],
+    allow_headers=['*'],
+)
 
 device = torch.device('cuda' if torch.cuda.is_available() else ('mps' if torch.backends.mps.is_available() else 'cpu'))
 print(device)
