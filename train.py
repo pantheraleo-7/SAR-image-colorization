@@ -26,7 +26,7 @@ print(device)
 generator = Generator().to(device)
 discriminator = Discriminator().to(device)
 
-criterion_bce = nn.BCELoss()
+criterion_bce = nn.BCEWithLogitsLoss()
 criterion_l1 = nn.L1Loss()
 
 optimizer_g = optim.Adam(generator.parameters(), lr=0.0002, betas=(0.5, 0.999))
