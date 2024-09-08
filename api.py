@@ -1,6 +1,5 @@
 import io
 
-import numpy as np
 import torch
 from fastapi import FastAPI, Request, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,9 +28,9 @@ model.load_state_dict(checkpoint['model_state_dict'])
 model.eval()
 
 transform = transforms.Compose([
-    transforms.Resize((256, 256)),
     transforms.ToTensor(),
-    # transforms.Normalize((0.5,), (0.5,))
+    transforms.Resize((256, 256)),
+    transforms.Normalize([0.5], [0.5])
 ])
 
 @app.get('/')
@@ -42,13 +41,13 @@ async def home(request: Request):
 async def sar_to_optical(file: UploadFile = File(...)):
     contents = await file.read()
     img = Image.open(io.BytesIO(contents)).convert('L')
-    img = transform(img).unsqueeze(0).to(device)
+    img = transform(img).to(device).unsqueeze(0)
 
     with torch.no_grad():
         out = model(img)
         out = out.squeeze().permute(1, 2, 0).cpu().numpy()
         out = (out+1)/2 * 255
-        out = out.astype(np.uint8)
+        out = out.astype('uint8')
 
     bytes = io.BytesIO()
     color_img = Image.fromarray(out)

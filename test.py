@@ -23,9 +23,9 @@ def color_img(img, model, transform, device):
     return out
 
 transform = transforms.Compose([
-    transforms.Resize((256, 256)),
     transforms.ToTensor(),
-    # transforms.Normalize((0.5,), (0.5,))
+    transforms.Resize((256, 256)),
+    transforms.Normalize([0.5], [0.5])
 ])
 
 test_img = Image.open('random.png').convert('L')
@@ -36,12 +36,12 @@ plt.figure(figsize=(10, 5))
 
 plt.subplot(1, 2, 1)
 plt.imshow(test_img, cmap='gray')
-plt.title('Input B/W Image (SAR)')
+plt.title('Input SAR Image (grayscale)')
 plt.axis('off')
 
 plt.subplot(1, 2, 2)
 plt.imshow((pred_img+1)/2)
-plt.title('Output RGB Image (Optical)')
+plt.title('Output Optical Image (RGB)')
 plt.axis('off')
 
 plt.show()

@@ -7,9 +7,9 @@ from dataset import SAROpticalDataset
 from models import Generator, Discriminator
 
 transform = transforms.Compose([
-    transforms.Resize((256, 256)),
     transforms.ToTensor(),
-    # transforms.Normalize((0.5,), (0.5,))
+    transforms.Resize((256, 256)),
+    transforms.Normalize([0.5], [0.5])
 ])
 
 data = SAROpticalDataset(root_dir='~/Downloads/dataset', transform=transform)
@@ -83,7 +83,7 @@ for epoch in range(1, num_epochs+1):
 
 # Save the model after training
 torch.save({
-    'epoch': num_epochs,
+    'epochs': num_epochs,
     'model_state_dict': generator.state_dict(),
     'optimizer_state_dict': optimizer_g.state_dict(),
     'train_loss': train_loss,
