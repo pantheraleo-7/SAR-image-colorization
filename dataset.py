@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from PIL import Image
 from torch.utils.data import Dataset
+from torchvision import io
 
 class SAROpticalDataset(Dataset):
     def __init__(self, root_dir, transform=None):
@@ -27,8 +27,8 @@ class SAROpticalDataset(Dataset):
 
     def __getitem__(self, idx):
         s1_img_path, s2_img_path = self.data_pairs[idx]
-        s1_img = Image.open(s1_img_path).convert('L')
-        s2_img = Image.open(s2_img_path).convert('RGB')
+        s1_img = io.read_image(s1_img_path, io.ImageReadMode.GRAY)
+        s2_img = io.read_image(s2_img_path, io.ImageReadMode.RGB)
 
         if self.transform is not None:
             s1_img = self.transform(s1_img)

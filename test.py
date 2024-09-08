@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import torch
-from PIL import Image
-from torchvision import transforms
+from torchvision import io, transforms
 
 from models import Generator
 
@@ -14,33 +13,32 @@ model.load_state_dict(checkpoint['model_state_dict'])
 model.eval()
 
 def color_img(img, model, transform, device):
-    img = transform(img).to(device).unsqueeze(0)
+    img = transform(img).unsqueeze(0).to(device)
 
     with torch.no_grad():
-        out = model(img)
-        out = out.squeeze().permute(1, 2, 0).cpu().numpy()
+        out = model(img).squeeze().permute(1, 2, 0)
+        out = out.numpy(force=True)
 
-    return out
+    return (out+1)/2
 
 transform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Resize((256, 256)),
+    transforms.Lambda(lambda img: img/255.0),
     transforms.Normalize([0.5], [0.5])
 ])
 
-test_img = Image.open('random.png').convert('L')
+test_img = io.read_image('random.png', io.ImageReadMode.GRAY)
 pred_img = color_img(test_img, model, transform, device)
 
 # Visualize the result
 plt.figure(figsize=(10, 5))
 
 plt.subplot(1, 2, 1)
-plt.imshow(test_img, cmap='gray')
+plt.imshow(test_img.permute(1, 2, 0), cmap='gray')
 plt.title('Input SAR Image (grayscale)')
 plt.axis('off')
 
 plt.subplot(1, 2, 2)
-plt.imshow((pred_img+1)/2)
+plt.imshow(pred_img)
 plt.title('Output Optical Image (RGB)')
 plt.axis('off')
 

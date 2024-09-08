@@ -29,7 +29,7 @@ model.eval()
 
 transform = transforms.Compose([
     transforms.ToTensor(),
-    transforms.Resize((256, 256)),
+    transforms.Resize(256),
     transforms.Normalize([0.5], [0.5])
 ])
 
@@ -41,16 +41,16 @@ async def home(request: Request):
 async def sar_to_optical(file: UploadFile = File(...)):
     contents = await file.read()
     img = Image.open(io.BytesIO(contents)).convert('L')
-    img = transform(img).to(device).unsqueeze(0)
+    img = transform(img).unsqueeze(0).to(device)
 
     with torch.no_grad():
-        out = model(img)
-        out = out.squeeze().permute(1, 2, 0).cpu().numpy()
-        out = (out+1)/2 * 255
-        out = out.astype('uint8')
+        out = model(img).squeeze().permute(1, 2, 0)
+        out = out.numpy(force=True)
 
+    out = (out+1)/2 * 255
+    out = out.astype('uint8')
+    color_img = Image.fromarray(out, mode='RGB')
     bytes = io.BytesIO()
-    color_img = Image.fromarray(out)
     color_img.save(bytes, format='PNG')
 
     return Response(bytes.getvalue(), media_type='image/png')

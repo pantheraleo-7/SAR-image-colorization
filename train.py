@@ -7,8 +7,7 @@ from dataset import SAROpticalDataset
 from models import Generator, Discriminator
 
 transform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Resize((256, 256)),
+    transforms.Lambda(lambda img: img/255.0),
     transforms.Normalize([0.5], [0.5])
 ])
 
