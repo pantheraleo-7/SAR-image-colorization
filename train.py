@@ -33,18 +33,18 @@ optimizer_d = optim.Adam(discriminator.parameters(), lr=0.0002, betas=(0.5, 0.99
 criterion_bce = nn.BCEWithLogitsLoss()
 criterion_l1 = nn.L1Loss()
 
-epochs = 0
+epochs_trained = 0
 if Path('gan.pth').exists():
     checkpoint = torch.load('gan.pth', map_location=device)
-    epochs += checkpoint['epochs']
+    epochs_trained += checkpoint['epochs_trained']
     generator.load_state_dict(checkpoint['generator_state'])
     discriminator.load_state_dict(checkpoint['discriminator_state'])
     optimizer_g.load_state_dict(checkpoint['optimizer_g_state'])
     optimizer_d.load_state_dict(checkpoint['optimizer_d_state'])
 
-train_epochs = 10
+epochs = 10
 train_loss = valid_loss = None
-for epoch in range(1, train_epochs+1):
+for epoch in range(1, epochs+1):
     generator.train()
     discriminator.train()
 
@@ -89,17 +89,15 @@ for epoch in range(1, train_epochs+1):
 
     valid_loss /= len(valid_dataset)
 
-    print(f'Epoch {epoch}/{train_epochs} | Train loss: {train_loss:.4f} | Validation loss: {valid_loss:.4f}')
+    # Save Model
+    torch.save({
+        'epochs_trained': epochs_trained+epoch,
+        'train_loss': train_loss,
+        'valid_loss': valid_loss,
+        'generator_state': generator.state_dict(),
+        'discriminator_state': discriminator.state_dict(),
+        'optimizer_g_state': optimizer_g.state_dict(),
+        'optimizer_d_state': optimizer_d.state_dict()
+    }, 'gan.pth')
 
-# Save the model after training
-torch.save({
-    'epochs': train_epochs+epochs,
-    'train_loss': train_loss,
-    'valid_loss': valid_loss,
-    'generator_state': generator.state_dict(),
-    'discriminator_state': discriminator.state_dict(),
-    'optimizer_g_state': optimizer_g.state_dict(),
-    'optimizer_d_state': optimizer_d.state_dict()
-}, 'gan.pth')
-
-print(f'Model saved after {train_epochs} epochs')
+    print(f'Epoch {epoch}/{epochs} | Train loss: {train_loss:.4f} | Validation loss: {valid_loss:.4f}')

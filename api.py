@@ -22,14 +22,14 @@ async def home(request: Request):
 
 @app.post('/')
 async def sar_to_optical(file: UploadFile = File(...)):
-    png_bytes = await file.read()
+    bytes = await file.read()
 
-    png_arr = torch.frombuffer(png_bytes, dtype=torch.uint8)
-    img_in = io.decode_png(png_arr, io.ImageReadMode.GRAY)
+    arr = torch.frombuffer(bytes, dtype=torch.uint8)
+    img_sar = io.decode_png(arr, io.ImageReadMode.GRAY)
 
-    img_out = colorize(img_in.unsqueeze(0)).squeeze()
-    png_arr = io.encode_png(img_out)
+    img_opt = colorize(img_sar.unsqueeze(0)).squeeze()
+    arr = io.encode_png(img_opt)
 
-    png_bytes = png_arr.numpy().tobytes()
+    bytes = arr.numpy().tobytes()
 
-    return Response(png_bytes, media_type='image/png')
+    return Response(bytes, media_type='image/png')
