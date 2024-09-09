@@ -8,7 +8,7 @@ print(device)
 
 checkpoint = torch.load('gan.pth', map_location=device)
 model = Generator().to(device) # Change `out_channels` parameter for non 3-channel images
-model.load_state_dict(checkpoint['model_state_dict'])
+model.load_state_dict(checkpoint['generator_state'])
 model.eval()
 
 transform = transforms.Compose([

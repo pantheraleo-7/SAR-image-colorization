@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader, random_split
@@ -25,15 +27,24 @@ print(device)
 generator = Generator().to(device)
 discriminator = Discriminator().to(device)
 
-criterion_bce = nn.BCEWithLogitsLoss()
-criterion_l1 = nn.L1Loss()
-
 optimizer_g = optim.Adam(generator.parameters(), lr=0.0002, betas=(0.5, 0.999))
 optimizer_d = optim.Adam(discriminator.parameters(), lr=0.0002, betas=(0.5, 0.999))
 
-num_epochs = 10
+criterion_bce = nn.BCEWithLogitsLoss()
+criterion_l1 = nn.L1Loss()
+
+epochs = 0
+if Path('gan.pth').exists():
+    checkpoint = torch.load('gan.pth', map_location=device)
+    epochs += checkpoint['epochs']
+    generator.load_state_dict(checkpoint['generator_state'])
+    discriminator.load_state_dict(checkpoint['discriminator_state'])
+    optimizer_g.load_state_dict(checkpoint['optimizer_g_state'])
+    optimizer_d.load_state_dict(checkpoint['optimizer_d_state'])
+
+train_epochs = 10
 train_loss = valid_loss = None
-for epoch in range(1, num_epochs+1):
+for epoch in range(1, train_epochs+1):
     generator.train()
     discriminator.train()
 
@@ -78,15 +89,17 @@ for epoch in range(1, num_epochs+1):
 
     valid_loss /= len(valid_dataset)
 
-    print(f'Epoch {epoch}/{num_epochs} | Train loss: {train_loss:.4f} | Validation loss: {valid_loss:.4f}')
+    print(f'Epoch {epoch}/{train_epochs} | Train loss: {train_loss:.4f} | Validation loss: {valid_loss:.4f}')
 
 # Save the model after training
 torch.save({
-    'epochs': num_epochs,
-    'model_state_dict': generator.state_dict(),
-    'optimizer_state_dict': optimizer_g.state_dict(),
+    'epochs': train_epochs+epochs,
     'train_loss': train_loss,
     'valid_loss': valid_loss,
+    'generator_state': generator.state_dict(),
+    'discriminator_state': discriminator.state_dict(),
+    'optimizer_g_state': optimizer_g.state_dict(),
+    'optimizer_d_state': optimizer_d.state_dict()
 }, 'gan.pth')
 
-print(f'Model saved after {num_epochs} epochs')
+print(f'Model saved after {train_epochs} epochs')
