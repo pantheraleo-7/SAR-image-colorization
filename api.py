@@ -1,10 +1,10 @@
 import torch
-from fastapi import FastAPI, Request, File, UploadFile
+from fastapi import FastAPI, Request, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, FileResponse
-from torchvision import io, transforms
+from torchvision import io
 
-from models import Generator
+from output import colorize
 
 app = FastAPI()
 
@@ -16,36 +16,20 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
-device = torch.device('cuda' if torch.cuda.is_available() else ('mps' if torch.backends.mps.is_available() else 'cpu'))
-print(device)
-
-checkpoint = torch.load('gan.pth', map_location=device)
-model = Generator().to(device) # Change `out_channels` parameter for non 3-channel images
-model.load_state_dict(checkpoint['model_state_dict'])
-model.eval()
-
-transform = transforms.Compose([
-    transforms.Resize((256, 256)),
-    transforms.ConvertImageDtype(torch.float32),
-    transforms.Normalize([0.5], [0.5])
-])
-
 @app.get('/')
 async def home(request: Request):
     return FileResponse('index.html')
 
 @app.post('/')
 async def sar_to_optical(file: UploadFile = File(...)):
-    contents = await file.read()
-    img = torch.frombuffer(contents, dtype=torch.uint8)
-    img = io.decode_png(img, io.ImageReadMode.GRAY)
-    img = transform(img).unsqueeze(0).to(device)
+    png_bytes = await file.read()
 
-    with torch.no_grad():
-        out = model(img).cpu().squeeze()
-        out = (out+1)/2 * 255
-        out = out.byte()
+    png_arr = torch.frombuffer(png_bytes, dtype=torch.uint8)
+    img_in = io.decode_png(png_arr, io.ImageReadMode.GRAY)
 
-    png = io.encode_png(out).numpy()
+    img_out = colorize(img_in.unsqueeze(0)).squeeze()
+    png_arr = io.encode_png(img_out)
 
-    return Response(png.tobytes(), media_type='image/png')
+    png_bytes = png_arr.numpy().tobytes()
+
+    return Response(png_bytes, media_type='image/png')
