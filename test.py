@@ -16,10 +16,11 @@ def color_img(img, model, transform, device):
     img = transform(img).unsqueeze(0).to(device)
 
     with torch.no_grad():
-        out = model(img).squeeze().permute(1, 2, 0)
-        out = out.numpy(force=True)
+        out = model(img).cpu().squeeze()
+        out = (out+1)/2 * 255
+        out = out.byte()
 
-    return (out+1)/2
+    return out.permute(1, 2, 0).numpy()
 
 transform = transforms.Compose([
     transforms.Lambda(lambda img: img/255.0),
@@ -33,7 +34,7 @@ pred_img = color_img(test_img, model, transform, device)
 plt.figure(figsize=(10, 5))
 
 plt.subplot(1, 2, 1)
-plt.imshow(test_img.permute(1, 2, 0), cmap='gray')
+plt.imshow(test_img.permute(1, 2, 0).numpy(), cmap='gray')
 plt.title('Input SAR Image (grayscale)')
 plt.axis('off')
 

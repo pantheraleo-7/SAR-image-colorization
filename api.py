@@ -1,11 +1,8 @@
-import io
-
 import torch
 from fastapi import FastAPI, Request, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, FileResponse
-from PIL import Image
-from torchvision import transforms
+from torchvision import io, transforms
 
 from models import Generator
 
@@ -28,8 +25,8 @@ model.load_state_dict(checkpoint['model_state_dict'])
 model.eval()
 
 transform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Resize(256),
+    transforms.Resize((256, 256)),
+    transforms.Lambda(lambda img: img/255.0),
     transforms.Normalize([0.5], [0.5])
 ])
 
@@ -40,17 +37,15 @@ async def home(request: Request):
 @app.post('/')
 async def sar_to_optical(file: UploadFile = File(...)):
     contents = await file.read()
-    img = Image.open(io.BytesIO(contents)).convert('L')
+    img = torch.frombuffer(contents, dtype=torch.uint8)
+    img = io.decode_png(img, io.ImageReadMode.GRAY)
     img = transform(img).unsqueeze(0).to(device)
 
     with torch.no_grad():
-        out = model(img).squeeze().permute(1, 2, 0)
-        out = out.numpy(force=True)
+        out = model(img).cpu().squeeze()
+        out = (out+1)/2 * 255
+        out = out.byte()
 
-    out = (out+1)/2 * 255
-    out = out.astype('uint8')
-    color_img = Image.fromarray(out, mode='RGB')
-    bytes = io.BytesIO()
-    color_img.save(bytes, format='PNG')
+    png = io.encode_png(out).numpy()
 
-    return Response(bytes.getvalue(), media_type='image/png')
+    return Response(png.tobytes(), media_type='image/png')
