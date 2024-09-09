@@ -26,7 +26,7 @@ model.eval()
 
 transform = transforms.Compose([
     transforms.Resize((256, 256)),
-    transforms.Lambda(lambda img: img/255.0),
+    transforms.ConvertImageDtype(torch.float32),
     transforms.Normalize([0.5], [0.5])
 ])
 

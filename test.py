@@ -23,7 +23,7 @@ def color_img(img, model, transform, device):
     return out.permute(1, 2, 0).numpy()
 
 transform = transforms.Compose([
-    transforms.Lambda(lambda img: img/255.0),
+    transforms.ConvertImageDtype(torch.float32),
     transforms.Normalize([0.5], [0.5])
 ])
 
