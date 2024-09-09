@@ -25,7 +25,7 @@ async def sar_to_optical(file: UploadFile = File(...)):
     bytes = await file.read()
 
     arr = torch.frombuffer(bytes, dtype=torch.uint8)
-    img_sar = io.decode_png(arr, io.ImageReadMode.GRAY)
+    img_sar = io.decode_image(arr, io.ImageReadMode.GRAY)
 
     img_opt = colorize(img_sar.unsqueeze(0)).squeeze()
     arr = io.encode_png(img_opt)
