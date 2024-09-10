@@ -5,12 +5,14 @@ from torchvision import io, utils
 from dataset import SAROpticalDataset
 from output import colorize
 
-dataset = SAROpticalDataset(root_dir='~/Downloads/dataset')
 
-test_size = 10
-test_data = Subset(dataset, range(1, len(dataset), len(dataset)//test_size))
+DATASET_PATH = '~/Downloads/dataset'
+TEST_SIZE = 9
 
-test_loader = DataLoader(test_data, batch_size=test_size, shuffle=False, drop_last=True)
+dataset = SAROpticalDataset(root_dir=DATASET_PATH)
+test_data = Subset(dataset, range(1, len(dataset), len(dataset)//TEST_SIZE))
+
+test_loader = DataLoader(test_data, batch_size=len(test_data), shuffle=False, drop_last=True)
 
 for sar_imgs, opt_imgs in test_loader:
     color_imgs = colorize(sar_imgs)
@@ -19,5 +21,5 @@ for sar_imgs, opt_imgs in test_loader:
     print('Mean Squared Error:', mse.item())
 
     imgs = [img for pair in zip(opt_imgs, color_imgs) for img in pair]
-    nrow = half if (half:=test_size//2)%2==0 else half-1
+    nrow = half+1 if (half:=TEST_SIZE//2)%2==1 else half+2
     io.write_png(utils.make_grid(imgs, nrow), 'test_grid.png')

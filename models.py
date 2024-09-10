@@ -1,8 +1,9 @@
 import torch
 from torch import nn
 
-# Generator for cGAN
+
 class Generator(nn.Module):
+
     def __init__(self, out_channels=3):
         super().__init__()
 
@@ -47,8 +48,9 @@ class Generator(nn.Module):
 
         return self.final(torch.cat([u3, d1], 1))
 
-# Discriminator for cGAN
+
 class Discriminator(nn.Module):
+
     def __init__(self, out_channels=3):
         super().__init__()
 

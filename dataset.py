@@ -3,7 +3,9 @@ from pathlib import Path
 from torch.utils.data import Dataset
 from torchvision import io
 
+
 class SAROpticalDataset(Dataset):
+
     def __init__(self, root_dir, transform=None):
         self.root_dir = Path(root_dir).expanduser()
         self.transform = transform
@@ -17,8 +19,8 @@ class SAROpticalDataset(Dataset):
             s1_imgs = [img for s1 in item.glob('s1*') for img in s1.glob('*.png')]
             s2_imgs = [img for s2 in item.glob('s2*') for img in s2.glob('*.png')]
 
-            s1_imgs = sorted(s1_imgs, key = lambda path: path.stem)
-            s2_imgs = sorted(s2_imgs, key = lambda path: path.stem)
+            s1_imgs = sorted(s1_imgs, key=lambda path: path.stem)
+            s2_imgs = sorted(s2_imgs, key=lambda path: path.stem)
 
             self.data_pairs.extend(zip(s1_imgs, s2_imgs))
 
