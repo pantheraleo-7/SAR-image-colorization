@@ -1,5 +1,4 @@
 torch==2.4.1
 torchvision==0.19.1
-matplotlib==3.9.2
 fastapi==0.114.0
 python-multipart==0.0.9
