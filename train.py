@@ -41,7 +41,7 @@ real = torch.ones(BATCH_SIZE, 1, 13, 13).to(device)
 
 epochs_trained = 0
 if Path('gan.pth').exists():
-    checkpoint = torch.load('gan.pth', map_location=device)
+    checkpoint = torch.load('gan.pth', map_location='cpu', weights_only=False)
 
     epochs_trained += checkpoint['epochs_trained']
     generator.load_state_dict(checkpoint['generator_state'])
