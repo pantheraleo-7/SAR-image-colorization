@@ -26,36 +26,37 @@
                 max-width: 100%;
                 height: auto;
             }
+            #imageGallery {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-around;
+            }
+            .image-pair {
+                width: 45%;
+                margin-bottom: 20px;
+            }
         </style>
     </head>
     <body>
         <h1>SAR Image Colorization</h1>
         <form id="uploadForm">
-            <input type="file" id="imageInput" accept="image/*" />
+            <input type="file" id="imagesInput" accept="image/*" multiple />
             <button type="submit">Colorize</button>
         </form>
-        <div id="result">
-            <div class="image-container">
-                <h3>Original Image</h3>
-                <img id="originalImage" src="" alt="Original Image" />
-            </div>
-            <div class="image-container">
-                <h3>Colorized Image</h3>
-                <img id="colorizedImage" src="" alt="Colorized Image" />
-            </div>
-        </div>
+        <div id="imageGallery"></div>
 
         <script>
             const form = document.getElementById("uploadForm");
-            const imageInput = document.getElementById("imageInput");
-            const originalImage = document.getElementById("originalImage");
-            const colorizedImage = document.getElementById("colorizedImage");
+            const imagesInput = document.getElementById("imagesInput");
+            const imageGallery = document.getElementById("imageGallery");
 
             form.addEventListener("submit", async (e) => {
                 e.preventDefault();
 
                 const formData = new FormData();
-                formData.append("file", imageInput.files[0]);
+                for (const file of imagesInput.files) {
+                    formData.append("files", file);
+                }
 
                 try {
                     const response = await fetch("http://localhost:8000/", {
@@ -64,14 +65,8 @@
                     });
 
                     if (response.ok) {
-                        const blob = await response.blob();
-                        const colorizedImageUrl = URL.createObjectURL(blob);
-                        colorizedImage.src = colorizedImageUrl;
-
-                        const originalImageUrl = URL.createObjectURL(
-                            imageInput.files[0],
-                        );
-                        originalImage.src = originalImageUrl;
+                        const colorizedImages = await response.json();
+                        displayImages(imagesInput.files, colorizedImages);
                     } else {
                         console.error("Error:", response.statusText);
                     }
@@ -79,6 +74,27 @@
                     console.error("Error:", error);
                 }
             });
+
+            function displayImages(originalFiles, colorizedImages) {
+                imageGallery.innerHTML = "";
+                for (let i = 0; i < originalFiles.length; i++) {
+                    const imagePair = document.createElement("div");
+                    imagePair.className = "image-pair";
+
+                    const originalImg = document.createElement("img");
+                    originalImg.src = URL.createObjectURL(originalFiles[i]);
+                    originalImg.alt = "Original Image";
+
+                    const colorizedImg = document.createElement("img");
+                    colorizedImg.src =
+                        "data:image/png;base64," + colorizedImages[i];
+                    colorizedImg.alt = "Colorized Image";
+
+                    imagePair.appendChild(originalImg);
+                    imagePair.appendChild(colorizedImg);
+                    imageGallery.appendChild(imagePair);
+                }
+            }
         </script>
     </body>
 </html>

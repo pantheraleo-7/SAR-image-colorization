@@ -1,8 +1,12 @@
+import asyncio
+import base64
+
 import torch
-from fastapi import FastAPI, Request, UploadFile, File
+from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response, FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from torchvision import io
+from torchvision.transforms.functional import resize
 
 from output import colorize
 
@@ -18,20 +22,27 @@ app.add_middleware(
 
 
 @app.get('/')
-async def home(request: Request):
+async def home():
     return FileResponse('index.html')
 
 
-@app.post('/')
-async def sar_to_optical(file: UploadFile = File(...)):
+async def read_sar_img(file):
     bytes = await file.read()
-
     arr = torch.frombuffer(bytes, dtype=torch.uint8)
-    sar_img = io.decode_image(arr, io.ImageReadMode.GRAY)
+    return resize(io.decode_image(arr, io.ImageReadMode.GRAY), [256, 256])
 
-    color_img = colorize(sar_img.unsqueeze(0)).squeeze()
+
+def encode_to_b64(color_img):
     arr = io.encode_png(color_img)
-
     bytes = arr.numpy().tobytes()
+    return base64.b64encode(bytes).decode()
 
-    return Response(bytes, media_type='image/png')
+
+@app.post('/')
+async def sar_to_color(files: list[UploadFile]):
+    sar_img_lst = await asyncio.gather(*[read_sar_img(file) for file in files])
+
+    sar_imgs = torch.stack(sar_img_lst)
+    color_imgs = colorize(sar_imgs)
+
+    return JSONResponse([encode_to_b64(color_img) for color_img in color_imgs])
