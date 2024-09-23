@@ -6,7 +6,7 @@ from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from torchvision import io
-from torchvision.transforms.functional import resize
+from torchvision.transforms import functional as fn
 
 from output import colorize
 
@@ -29,7 +29,7 @@ async def home():
 async def read_sar_img(file):
     bytes = await file.read()
     arr = torch.frombuffer(bytes, dtype=torch.uint8)
-    return resize(io.decode_image(arr, io.ImageReadMode.GRAY), [256, 256])
+    return fn.resize(io.decode_image(arr, io.ImageReadMode.GRAY), [256, 256])
 
 
 def encode_to_b64(color_img):

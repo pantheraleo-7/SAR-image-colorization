@@ -9,7 +9,7 @@ from dataset import SAROpticalDataset
 from models import Generator, Discriminator
 
 
-DATASET_PATH = '~/Downloads/dataset'
+DATASET_PATH = 'data/dataset/'
 BATCH_SIZE = 32
 EPOCHS = 5
 

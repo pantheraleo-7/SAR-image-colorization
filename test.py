@@ -6,7 +6,7 @@ from dataset import SAROpticalDataset
 from output import colorize
 
 
-DATASET_PATH = '~/Downloads/dataset'
+DATASET_PATH = 'data/dataset/'
 TEST_SIZE = 9
 
 dataset = SAROpticalDataset(root_dir=DATASET_PATH)
