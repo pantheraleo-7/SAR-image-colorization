@@ -1,4 +1,7 @@
 *.png
 *.pth
+log.txt
+.env
+.venv
 __pycache__/
 /data/
