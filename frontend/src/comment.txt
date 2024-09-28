@@ -1,0 +1,25 @@
+ //  function base64ToBlob(base64, mimeType) {
+  //   // Remove the base64 prefix if it exists
+  //   const byteCharacters = atob(base64);
+  //   const byteNumbers = new Array(byteCharacters.length);
+
+  //   // Convert each character to a byte number
+  //   for (let i = 0; i < byteCharacters.length; i++) {
+  //     byteNumbers[i] = byteCharacters.charCodeAt(i);
+  //   }
+  //   // Convert the byte array to a Uint8Array
+  //   const byteArray = new Uint8Array(byteNumbers);
+
+  //   // Create the Blob
+  //   return new Blob([byteArray], { type: mimeType });
+  // }
+  // const [colorizedImageData,setColorizedImageData]=useState([])
+
+
+   // const f=()=>{
+  //   const clipboardItem = new ClipboardItem({ 'image/png': colorizedImageData[0] });
+  //  navigator.clipboard.write([clipboardItem])
+  // }
+  // useEffect(() => {
+  //     console.log("Colorized Image Data:", colorizedImageData);
+  // }, [colorizedImageData]);
