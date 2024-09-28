@@ -22,4 +22,4 @@ for sar_imgs, opt_imgs in test_loader:
 
     imgs = [img for pair in zip(opt_imgs, color_imgs) for img in pair]
     nrow = half+1 if (half:=TEST_SIZE//2)%2==1 else half+2
-    io.write_png(utils.make_grid(imgs, nrow), 'test_grid.png')
+    io.write_png(utils.make_grid(imgs, nrow), 'data/test_grid.png')

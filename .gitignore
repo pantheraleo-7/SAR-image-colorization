@@ -1,5 +1,3 @@
-*.png
-*.pth
 log.txt
 .env
 .venv

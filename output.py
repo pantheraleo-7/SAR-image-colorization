@@ -7,7 +7,7 @@ from models import Generator
 device = torch.device('cuda' if torch.cuda.is_available() else ('mps' if torch.backends.mps.is_available() else 'cpu'))
 print('Device:', device)
 
-checkpoint = torch.load('gan.pth', map_location='cpu', weights_only=False)
+checkpoint = torch.load('data/gan.pth', map_location='cpu', weights_only=False)
 model = Generator().to(device)
 model.load_state_dict(checkpoint['generator_state'])
 model.eval()

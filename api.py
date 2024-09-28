@@ -2,9 +2,9 @@ import asyncio
 import base64
 
 import torch
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import JSONResponse
 from torchvision import io
 from torchvision.transforms import functional as fn
 
@@ -14,16 +14,11 @@ from output import colorize
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
+    allow_origins=['http://localhost:*'],
     allow_headers=['*'],
     allow_methods=['*'],
     allow_credentials=True
 )
-
-
-@app.get('/')
-async def home():
-    return FileResponse('index.html')
 
 
 async def read_sar_img(file):
@@ -39,7 +34,7 @@ def encode_to_b64(color_img):
 
 
 @app.post('/')
-async def sar_to_color(files: list[UploadFile]):
+async def sar_to_color(files: list[UploadFile] = File(...)):
     sar_img_lst = await asyncio.gather(*[read_sar_img(file) for file in files])
 
     sar_imgs = torch.stack(sar_img_lst)

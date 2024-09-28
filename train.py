@@ -40,8 +40,8 @@ fake = torch.zeros(BATCH_SIZE, 1, 13, 13).to(device)
 real = torch.ones(BATCH_SIZE, 1, 13, 13).to(device)
 
 epochs_trained = 0
-if Path('gan.pth').exists():
-    checkpoint = torch.load('gan.pth', map_location='cpu', weights_only=False)
+if Path('data/gan.pth').exists():
+    checkpoint = torch.load('data/gan.pth', map_location='cpu', weights_only=False)
 
     epochs_trained += checkpoint['epochs_trained']
     generator.load_state_dict(checkpoint['generator_state'])
@@ -102,6 +102,6 @@ for epoch in range(1, EPOCHS+1):
         'discriminator_state': discriminator.state_dict(),
         'optimizer_g_state': optimizer_g.state_dict(),
         'optimizer_d_state': optimizer_d.state_dict()
-    }, 'gan.pth')
+    }, 'data/gan.pth')
 
     print(f'Epoch {epoch}/{EPOCHS} | Train loss: {train_loss:.4f} | Validation loss: {valid_loss:.4f}')
