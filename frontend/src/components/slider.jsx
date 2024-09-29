@@ -6,7 +6,7 @@ const ImageComparison = (props) => {
   const reactCompareSliderRef = useRef(null); // Create a ref for the slider
 
   const handleDownload = () => {
-    saveAs(props.src2, `colorized${props.index}.png`);
+    saveAs(props.src2, `colorized${props.index+1}.png`);
   };
 
   useEffect(() => {
