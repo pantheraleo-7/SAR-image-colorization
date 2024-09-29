@@ -6,7 +6,7 @@ const ImageComparison = (props) => {
   const reactCompareSliderRef = useRef(null); // Create a ref for the slider
 
   const handleDownload = () => {
-    saveAs(props.src2, `colorized${props.index+1}.png`);
+    saveAs(props.src2, `colorized${(props.index)+1}.png`);
   };
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const ImageComparison = (props) => {
   }, []); // Run this effect once on mount
 
   return (
-    <div className="m-4 image-box1 gap-2 relative">
+    <div className="m-4 image-box1 gap-2 ">
       <div className=" slide-box1 bg-[#F0F0F0] shadow-lg mb-10 flex flex-col justify-between rounded-lg transition-transform transform hover:scale-105">
         <div className=" text-center p-4 w-full  ">
           <ReactCompareSlider
@@ -44,13 +44,13 @@ const ImageComparison = (props) => {
             className="compare-slider"
             transition="700ms cubic-bezier(.17,.67,.83,.67)"
           />
-          <span className="font-semibold text-lg p-2 mt-2 text-gray-900">
-          {props.index+1}. colorized.png
-          </span>
-        </div>
-        <div className="w-full  flex justify-center">
+          <div className=" flex justify-center mt-5 gap-5">
+            <div className="w-3/4 font-semibold text-lg ml-7  text-gray-900">
+          {props.index+1}.colorized.png
+            </div>
+          <div className="w-full h-full  flex items-center border-box">
           <button
-            className="bg-[#28A745] w-1/12 flex justify-center text-white font-medium rounded-lg   border-box  absolute top-5 right-5"
+            className="bg-[#28A745]  flex justify-center text-white font-medium rounded-lg   border-box"
             onClick={handleDownload}
           >
           <svg
@@ -60,7 +60,7 @@ const ImageComparison = (props) => {
   width="100%"
   height="100%"
   
-  style={{ maxWidth: "30px", maxHeight: "30px",fill:"white"}}  // Dynamic max sizes for responsiveness
+  style={{ maxWidth: "30px",fill:"white"}}  // Dynamic max sizes for responsiveness
 >
   <g>
     <path d="M25,19a1,1,0,0,0-1,1v5H8V20a1,1,0,0,0-2,0v5.14A1.93,1.93,0,0,0,8,27H24a1.93,1.93,0,0,0,2-1.86V20A1,1,0,0,0,25,19Z"></path>
@@ -70,6 +70,9 @@ const ImageComparison = (props) => {
 
           </button>
         </div>
+        </div>
+        </div>
+       
       </div>
     </div>
 
