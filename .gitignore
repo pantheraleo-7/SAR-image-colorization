@@ -1,5 +1,7 @@
-log.txt
-.env
-.venv
-__pycache__/
 /data/
+__pycache__/
+.venv
+
+.env
+log.txt
+node_modules/

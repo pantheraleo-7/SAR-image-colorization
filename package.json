@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@splidejs/react-splide": "^0.7.12",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-slick": "^0.30.2",
+    "slick-carousel": "^1.8.1"
+  }
+}
