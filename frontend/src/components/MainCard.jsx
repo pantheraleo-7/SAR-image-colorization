@@ -46,7 +46,7 @@ const handleDragStart = (e, imgSrc) => {
           options={{
             rewind: true,
             autoplay: true,
-            interval: 1500, // Time in milliseconds between slides
+            interval: 1700, // Time in milliseconds between slides
             pauseOnHover: true,
             width: "100%",
             gap: '1rem',

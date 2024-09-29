@@ -69,6 +69,10 @@ function App() {
       // Stop loading regardless of success or failure
     }
   };
+  const handle=(e)=>{
+    setImage([])
+    setColorizedImage([])
+  }
 
   return (
     <>
@@ -93,21 +97,26 @@ function App() {
 
         <div className="flex flex-wrap justify-center w-full border-box">
        
-          {!load &&((image.length && !(ColorizedImage.length)) && !(error)) && 
-            image.map((img, index) => (<ImageCard src={img} key={index} title={"original image"} />))}
+          {!load && ((image.length && !(ColorizedImage.length)) && !(error)) ? 
+            image.map((img, index) => (<ImageCard src={img} key={index} title={"original image"} />)):""}
 
-{/*             
-              <div className="error-message text-black">Image upload failed. Please try again.</div> */}
+            
+              {error && <div className="error-message text-black">Image upload failed. Please try again.</div>}
               { load && <LoadingBar load={true} count={image.length} />}
               {!load && ColorizedImage.length ? (
+                <>
               <Suspense fallback={<LoadingBar load={true} count={image.length} />}>
                 <ImageComparisonArray image={image} ColorizedImage={ColorizedImage} />
               </Suspense>
-            ):"" }
-          
+              
+                </>
+            ):null}
             
         </div>
       </div>
+      <div className="flex flex-wrap justify-center w-full border-box">
+          { ColorizedImage.length ? <button className="mb-10 mt-10 text-white bg-[#007BFF] hover: font-medium rounded-lg text-xl px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-[#0056b3] dark:focus:ring-blue-800" onClick={(e)=>handle(e)}>upload Images</button>:""}
+       </div>
 
       <Footer />
     </>
