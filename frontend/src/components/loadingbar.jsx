@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 const LoadingBar = ({ load, count }) => {
   const [progress, setProgress] = useState(0);
