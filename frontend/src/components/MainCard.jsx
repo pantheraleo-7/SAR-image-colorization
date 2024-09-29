@@ -68,7 +68,7 @@ const handleDragStart = (e, imgSrc) => {
                 />
                 <div className="ml-5 text-white absolute bottom-11">
                   <h2 className="text-3xl font-semibold">{image.description}</h2>
-                  <h4>{image.caption}</h4>
+                  {/* <h4>{image.caption}</h4> */}
                 </div>
               </div>
             </SplideSlide>
