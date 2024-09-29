@@ -1,13 +1,14 @@
 * {
   transition: all 0.3s ease;
 }
-.download-btn{
-  background-color: #b4b7c93a;
+.upload-btn,.download-btn{
+  background-color: #b4b7c983;
   /* background-color: #ffffff9f; */
   z-index: 1;
 }
 body {
-  background-color:#E0E0E0
+  background-color:#E0E0E0;
+  height: 100%;
 }
 .upload-box {
   border: 2px dashed #cccccc;
@@ -145,6 +146,7 @@ section {
   height: 280px;
 }
 .footer{
+  margin: 0;
   position: relative;
-  bottom: 0px;
+  bottom:0px;
 }
