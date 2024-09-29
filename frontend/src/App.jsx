@@ -3,17 +3,18 @@ import FileUpload from "./components/Drag";
 import './components/d.css';
 import MainCard from "./components/MainCard";
 import Footer from "./components/Footer";
-import LoadingBar from "./loadingbar";
-import ImageCard from './components/ImageCard'
+import LoadingBar from "./components/loadingbar";
+import ImageCard from './components/ImageCard';
 function App() {
   const ImageComparisonArray = lazy(() => import('./components/colorizedImage'));
-  const [load, setLoad] = useState();
+  const [load, setLoad] = useState(false);
+  const [error, seterror] = useState(false);
   const [image, setImage] = useState([]);
   const [ColorizedImage, setColorizedImage] = useState([]);
-  const [uploads,setUploads]=useState([])
+  const [uploads, setUploads] = useState([])
 
   const handleImageChange = (acceptedFiles) => {
-    console.log("A",acceptedFiles)
+    console.log("A", acceptedFiles)
     setUploads(acceptedFiles)
     setImage(acceptedFiles.map(file => URL.createObjectURL(file)));
   };
@@ -28,12 +29,13 @@ function App() {
     e.preventDefault();
 
     // Start loading
-    setLoad(true); // Trigger loading
+    setLoad(true);
+     // Trigger loading
     const formData = new FormData();
     // This adds each file to the FormData object. Using append allows you to add multiple files under the same key 
-    uploads.forEach(e=>{
+    uploads.forEach(e => {
 
-      formData.append("files",e)
+      formData.append("files", e)
     })
     console.log("ff", formData.getAll('files'));
 
@@ -51,14 +53,20 @@ function App() {
           (e) => "data:image/png;base64," + e
         );
         setColorizedImage(colorizedImageArray);
+        setUploads([]);  // Clear uploads
+     
       } else {
+        // setLoad(false);
         console.log("Image upload failed");
+        seterror(true)
       }
     } catch (error) {
       console.error("Error uploading image:", error);
+      seterror(true)
     } finally {
+      setLoad(false);
       // Stop loading
-      setLoad(false); // Stop loading regardless of success or failure
+      // Stop loading regardless of success or failure
     }
   };
 
@@ -66,7 +74,7 @@ function App() {
     <>
       <MainCard />
       <div className="text-white dark:bg-[#E0E0E0]">
-        {ColorizedImage.length <= 0 ?
+        {ColorizedImage.length <= 0  ?
           (<form
             onSubmit={handleImageUpload}
             method="post"
@@ -75,7 +83,7 @@ function App() {
             <div id="drag" className="flex flex-col items-center">
               <FileUpload handleImageChange={handleImageChange} />
               <button id="color-box"
-                className="mb-10 text-white bg-[#007BFF] hover: font-medium rounded-lg text-xl px-4 py-2 text-center dark:bg-blue-600 dark:hover:#bg-[#0056b3] dark:focus:ring-blue-800"
+                className="mb-10 text-white bg-[#007BFF] hover: font-medium rounded-lg text-xl px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-[#0056b3] dark:focus:ring-blue-800"
                 type="submit"
               >
                 Colorize
@@ -84,21 +92,20 @@ function App() {
           </form>) : ""}
 
         <div className="flex flex-wrap justify-center w-full border-box">
-          {load ? (
-            <LoadingBar load={load} count={image.length} />
-          ) : ColorizedImage.length > 0 ? (
-            <Suspense fallback={<LoadingBar load={true} count={image.length} />}>
-              <ImageComparisonArray image={image} ColorizedImage={ColorizedImage} />
+       
+          {!load &&((image.length && !(ColorizedImage.length)) && !(error)) && 
+            image.map((img, index) => (<ImageCard src={img} key={index} title={"original image"} />))}
 
-            </Suspense>
-          ) : (
-            <>
-            {image.map((img, index) => (<ImageCard src={img} key={index} title={"original image"} />))}
-              {/* load && <div className="text-black text-xl error">"File not colorized error"</div>} */}
-            </>
-          )}
-
-
+{/*             
+              <div className="error-message text-black">Image upload failed. Please try again.</div> */}
+              { load && <LoadingBar load={true} count={image.length} />}
+              {!load && ColorizedImage.length ? (
+              <Suspense fallback={<LoadingBar load={true} count={image.length} />}>
+                <ImageComparisonArray image={image} ColorizedImage={ColorizedImage} />
+              </Suspense>
+            ):"" }
+          
+            
         </div>
       </div>
 
