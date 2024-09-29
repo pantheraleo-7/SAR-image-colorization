@@ -1,5 +1,6 @@
 import ImageComparison from "./slider";
 function ImageComparisonArray(props) {
+
     const { image,handle } = props
     return (
         <>
@@ -12,5 +13,6 @@ function ImageComparisonArray(props) {
 
 
     )
+
 }
 export default ImageComparisonArray;
