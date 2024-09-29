@@ -14,7 +14,6 @@ from output import colorize
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://localhost:*'],
     allow_headers=['*'],
     allow_methods=['*'],
     allow_credentials=True

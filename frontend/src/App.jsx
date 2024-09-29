@@ -41,7 +41,7 @@ function App() {
     console.log("ff", formData.getAll("files"));
 
     try {
-      const api_url = import.meta.env.VITE_API_URL || "http://localhost:8000/";
+      const api_url = import.meta.env.VITE_API_URL || "https://pseudosquad.centralindia.cloudapp.azure.com";
       const res = await fetch(api_url, {
         method: "POST",
         body: formData,

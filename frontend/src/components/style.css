@@ -139,3 +139,7 @@ section {
   align-items: center;
   height: 280px;
 }
+.footer{
+  position: relative;
+  bottom: 0px;
+}

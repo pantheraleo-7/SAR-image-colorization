@@ -6,7 +6,7 @@ const ImageComparison = (props) => {
   const reactCompareSliderRef = useRef(null); // Create a ref for the slider
 
   const handleDownload = () => {
-    saveAs(props.src2, "colorized.png");
+    saveAs(props.src2, `colorized${props.index}.png`);
   };
 
   useEffect(() => {
@@ -35,8 +35,9 @@ if (props.flag) {
   <div className=" slide-box1 bg-[#F0F0F0] shadow-lg mb-10 flex flex-col justify-between rounded-lg transition-transform transform hover:scale-105">
     <div className=" text-center p-4 w-full  ">
       <ReactCompareSlider
+    changePositionOnHover={true}
         ref={reactCompareSliderRef}
-        style={{width:"100%",height:"300px"}}
+        style={{width:"100%",height:"300px",flexGrow:1}}
         itemOne={<ReactCompareSliderImage src={props.src1} />}
         itemTwo={<ReactCompareSliderImage src={props.src2} />}
         position={props.position}
