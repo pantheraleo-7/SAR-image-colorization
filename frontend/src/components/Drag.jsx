@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import './d.css'; // Add custom styling for the box
+import "./style.css"; // Add custom styling for the box
 
 const FileUpload = ({ handleImageChange }) => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -17,12 +17,14 @@ const FileUpload = ({ handleImageChange }) => {
     if (imgSrc) {
       try {
         // Fetch the image as a Blob from the image URL
-        const res = await fetch(imgSrc, { method: 'GET' });
+        const res = await fetch(imgSrc, { method: "GET" });
         if (!res.ok) throw new Error("Network response was not ok");
         const blob = await res.blob();
-        
+
         // Create a File object
-        const file = new File([blob], "dropped-image.jpeg", { type: blob.type });
+        const file = new File([blob], "dropped-image.jpeg", {
+          type: blob.type,
+        });
 
         // Update the state and call the handler
         setUploadedFiles((prevFiles) => [...prevFiles, file.name]);
@@ -33,15 +35,18 @@ const FileUpload = ({ handleImageChange }) => {
     }
   };
 
-  const onDrop = useCallback((acceptedFiles) => {
-    console.log("Files accepted:", acceptedFiles); // testing
-    setUploadedFiles(acceptedFiles.map(file => file.name));
-    handleImageChange(acceptedFiles);
-  }, [handleImageChange]);
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      console.log("Files accepted:", acceptedFiles); // testing
+      setUploadedFiles(acceptedFiles.map((file) => file.name));
+      handleImageChange(acceptedFiles);
+    },
+    [handleImageChange],
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: { 'image/*': [] },
+    accept: { "image/*": [] },
     multiple: true,
   });
 
@@ -54,22 +59,27 @@ const FileUpload = ({ handleImageChange }) => {
     >
       <input
         {...getInputProps({
-          name: 'files',
-          type: 'file',
-          id: 'file',
+          name: "files",
+          type: "file",
+          id: "file",
           className: "pl-70",
         })}
       />
       {uploadedFiles.length > 0 ? (
-        <p className="text-#333333 overflow-auto ">File(s) uploaded: {uploadedFiles.join(", ")}</p> // Display the uploaded file names
+        <p className="text-#333333 overflow-auto ">
+          File(s) uploaded: {uploadedFiles.join(", ")}
+        </p> // Display the uploaded file names
       ) : (
         <>
           {isDragActive ? (
             <p className="text-#333333">Drop the folder or images here...</p>
           ) : (
             <>
-              <div className="upload-icon ">&#x2193;</div> {/* Optional: Use an SVG icon or custom arrow */}
-              <p className="text-#333333">Browse or drag & drop to upload image(s)</p>
+              <div className="upload-icon ">&#x2193;</div>{" "}
+              {/* Optional: Use an SVG icon or custom arrow */}
+              <p className="text-#333333">
+                Browse or drag & drop to upload image(s)
+              </p>
             </>
           )}
         </>

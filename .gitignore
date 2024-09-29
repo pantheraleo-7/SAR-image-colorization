@@ -1,6 +1,7 @@
-log.txt
-.env
-.venv
-__pycache__/
 /data/
-*node_modules/*
+__pycache__/
+.venv
+
+.env
+log.txt
+node_modules/
