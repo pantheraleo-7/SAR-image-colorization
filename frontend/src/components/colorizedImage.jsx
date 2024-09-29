@@ -12,5 +12,6 @@ function ImageComparisonArray(props) {
 
 
     )
+
 }
 export default ImageComparisonArray;
