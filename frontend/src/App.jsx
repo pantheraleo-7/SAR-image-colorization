@@ -32,7 +32,7 @@ function App() {
 
     // Start loading
     setLoad(true);
-    // Trigger loading
+
     const formData = new FormData();
     // This adds each file to the FormData object. Using append allows you to add multiple files under the same key
     uploads.forEach((e) => {
