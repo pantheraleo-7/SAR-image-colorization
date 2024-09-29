@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const LoadingBar = () => {
-  const [loading, setLoading] = useState(false);
+const LoadingBar = (props) => {
+  const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
 
   const startLoading = () => {
-    setLoading(true);
+    setLoading(props.load);
     setProgress(0);
 
     const interval = setInterval(() => {
@@ -15,7 +15,11 @@ const LoadingBar = () => {
           setLoading(false);
           return 100; // Ensure progress stays at 100%
         }
-        return Math.min(oldProgress + 5, 100); // Increment progress by 5
+        let min=50/props.count
+        if(props.count>10){
+          min=2
+        }
+        return Math.min(oldProgress + Math.floor(min), 100); // Increment progress by 5
       });
     }, 200); // Change interval timing if needed
 
@@ -26,19 +30,15 @@ const LoadingBar = () => {
       setProgress(100); // Ensure it reaches 100%
     }, 5000);
   };
+  useEffect(()=>{
+    if(loading){
+      startLoading()
+    }
+  },[loading])
 
   return (
     <>
     <div className="flex flex-col items-center w-full max-w-md mx-auto">
-      <button
-        onClick={startLoading}
-        disabled={loading}
-        className={`px-4 py-2 text-white font-semibold rounded ${
-            loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
-            } transition-colors duration-300`}
-      >
-        {loading ? 'Loading...' : 'Start Loading'}
-      </button>
       {loading && (
           <div className="w-full h-5 bg-gray-300 rounded mt-2">
           <div
