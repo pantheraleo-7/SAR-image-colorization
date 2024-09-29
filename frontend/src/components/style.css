@@ -1,6 +1,11 @@
 * {
   transition: all 0.3s ease;
 }
+.download-btn{
+  background-color: #b4b7c93a;
+  /* background-color: #ffffff9f; */
+  z-index: 1;
+}
 body {
   background-color:#E0E0E0
 }
