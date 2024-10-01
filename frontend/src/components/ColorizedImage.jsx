@@ -1,4 +1,4 @@
-import ImageComparison from "./slider";
+import ImageComparison from "./Slider";
 function ImageComparisonArray(props) {
     const { image } = props
     return (

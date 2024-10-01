@@ -1,8 +1,8 @@
 import React from "react";
 import "./style.css";
-import firstImage from "/public/assets/a.jpeg";
-import secondImage from "/public/assets/b.jpeg";
-import thirdImage from "/public/assets/c.jpeg";
+import firstImage from "/src/assets/a.jpeg";
+import secondImage from "/src/assets/b.jpeg";
+import thirdImage from "/src/assets/c.jpeg";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
 

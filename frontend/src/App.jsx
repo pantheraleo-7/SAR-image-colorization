@@ -3,11 +3,11 @@ import FileUpload from "./components/Drag";
 import "./components/style.css";
 import MainCard from "./components/MainCard";
 import Footer from "./components/Footer";
-import LoadingBar from "./components/loadingbar";
+import LoadingBar from "./components/LoadingBar";
 import ImageCard from "./components/ImageCard";
 function App() {
   const ImageComparisonArray = lazy(
-    () => import("./components/colorizedImage"),
+    () => import("./components/ColorizedImage"),
   );
   const [load, setLoad] = useState(false);
   const [error, seterror] = useState(false);
@@ -41,7 +41,7 @@ function App() {
     console.log("ff", formData.getAll("files"));
 
     try {
-      const api_url = import.meta.env.VITE_API_URL || "http://localhost:8000/";
+      const api_url = import.meta.env.VITE_API_URL;
       const res = await fetch(api_url, {
         method: "POST",
         body: formData,
