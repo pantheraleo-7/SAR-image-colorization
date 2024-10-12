@@ -76,7 +76,8 @@ for epoch in range(1, EPOCHS+1):
 
         train_loss += (loss_g.item()+loss_d.item())*BATCH_SIZE
 
-        if i%100==0: print(f'Batch {i}/{len(train_loader)} | G loss: {loss_g:.4f} | D loss: {loss_d:.4f}')
+        if i%100==0:
+            print(f'Batch {i}/{len(train_loader)} | G loss: {loss_g:.4f} | D loss: {loss_d:.4f}')
 
     train_loss /= len(train_data)
 
