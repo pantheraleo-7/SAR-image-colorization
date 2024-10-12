@@ -1,10 +1,10 @@
 import React from "react";
-import "./style.css";
-import firstImage from "/assets/a.jpeg";
-import secondImage from "/assets/b.jpeg";
-import thirdImage from "/assets/c.jpeg";
+import firstImage from "/src/assets/a.jpeg";
+import secondImage from "/src/assets/b.jpeg";
+import thirdImage from "/src/assets/c.jpeg";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
+import "./style.css";
 
 const MainCard = () => {
   // const handleDragStart = (e, imgSrc) => {

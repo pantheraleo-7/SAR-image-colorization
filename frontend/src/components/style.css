@@ -2,15 +2,15 @@
     transition: all 0.3s ease;
     box-sizing: border-box;
 }
-.upload-btn,.download-btn{
-  background-color: #b4b7c983;
-  /* background-color: #ffffff9f; */
-  z-index: 1;
+.upload-btn,
+.download-btn {
+    background-color: #b4b7c983;
+    /* background-color: #ffffff9f; */
+    z-index: 1;
 }
 body {
-
-  background-color:#E0E0E0;
-  position: relative;
+    background-color: #e0e0e0;
+    position: relative;
 }
 .upload-box {
     border: 2px dashed #cccccc;
@@ -142,12 +142,11 @@ section {
 #color-box {
     min-width: 150px;
     min-height: 40px;
-   
 }
-#color-box:active{
+#color-box:active {
     transform: scale(0.9);
 }
-#root{
+#root {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -161,8 +160,9 @@ section {
     align-items: center;
     /* height: 280px; */
 }
- @media screen and (max-width: 768px) {
-    .image-box,.image-box1{
+@media screen and (max-width: 768px) {
+    .image-box,
+    .image-box1 {
         width: 90%;
     }
- }
+}

@@ -9,7 +9,6 @@ const FileUpload = ({ handleImageChange }) => {
   // const handleDropFromOutside = async (e) => {
   //   e.preventDefault();
 
-
   //   // Get the image URL from the drag event
   //   const imgSrc = e.dataTransfer.getData("text/plain");
   //   console.log("Dropped image URL:", imgSrc);
