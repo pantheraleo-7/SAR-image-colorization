@@ -5,35 +5,35 @@ import "./style.css"; // Add custom styling for the box
 const FileUpload = ({ handleImageChange }) => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
-  // Function to handle files dropped directly
-  const handleDropFromOutside = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  // // Function to handle files dropped directly
+  // const handleDropFromOutside = async (e) => {
+  //   e.preventDefault();
 
-    // Get the image URL from the drag event
-    const imgSrc = e.dataTransfer.getData("text/plain");
-    console.log("Dropped image URL:", imgSrc);
 
-    if (imgSrc) {
-      try {
-        // Fetch the image as a Blob from the image URL
-        const res = await fetch(imgSrc, { method: "GET" });
-        if (!res.ok) throw new Error("Network response was not ok");
-        const blob = await res.blob();
+  //   // Get the image URL from the drag event
+  //   const imgSrc = e.dataTransfer.getData("text/plain");
+  //   console.log("Dropped image URL:", imgSrc);
 
-        // Create a File object
-        const file = new File([blob], "dropped-image.jpeg", {
-          type: blob.type,
-        });
+  //   if (imgSrc) {
+  //     try {
+  //       // Fetch the image as a Blob from the image URL
+  //       const res = await fetch(imgSrc, { method: "GET" });
+  //       if (!res.ok) throw new Error("Network response was not ok");
+  //       const blob = await res.blob();
 
-        // Update the state and call the handler
-        setUploadedFiles((prevFiles) => [...prevFiles, file.name]);
-        handleImageChange([file]);
-      } catch (error) {
-        console.error("Error fetching the image:", error);
-      }
-    }
-  };
+  //       // Create a File object
+  //       const file = new File([blob], "dropped-image.jpeg", {
+  //         type: blob.type,
+  //       });
+
+  //       // Update the state and call the handler
+  //       setUploadedFiles((prevFiles) => [...prevFiles, file.name]);
+  //       handleImageChange([file]);
+  //     } catch (error) {
+  //       console.error("Error fetching the image:", error);
+  //     }
+  //   }
+  // };
 
   const onDrop = useCallback(
     (acceptedFiles) => {
@@ -54,8 +54,8 @@ const FileUpload = ({ handleImageChange }) => {
     <div
       className="upload-box bg-[#F0F0F0] m-10"
       {...getRootProps()}
-      onDrop={handleDropFromOutside} // Handle drops from outside
-      onDragOver={(e) => e.preventDefault()} // Prevent default behavior for drag events
+      // onDrop={handleDropFromOutside} // Handle drops from outside
+      // onDragOver={(e) => e.preventDefault()} // Prevent default behavior for drag events
     >
       <input
         {...getInputProps({
