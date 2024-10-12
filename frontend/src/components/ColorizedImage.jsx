@@ -1,4 +1,5 @@
 import ImageComparison from "./Slider";
+
 function ImageComparisonArray(props) {
   const { image } = props;
   return (
@@ -10,9 +11,11 @@ function ImageComparisonArray(props) {
           key={index}
           position={40}
           flag={true}
+          index={index}
         />
       ))}
     </>
   );
 }
+
 export default ImageComparisonArray;

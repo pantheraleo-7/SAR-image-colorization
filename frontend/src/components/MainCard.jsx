@@ -1,19 +1,19 @@
 import React from "react";
-import "./style.css";
 import firstImage from "/src/assets/a.jpeg";
 import secondImage from "/src/assets/b.jpeg";
 import thirdImage from "/src/assets/c.jpeg";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
+import "./style.css";
 
 const MainCard = () => {
-  const handleDragStart = (e, imgSrc) => {
-    e.preventDefault(); // Prevent default behavior for drag events
-    console.log(imgSrc);
+  // const handleDragStart = (e, imgSrc) => {
+  //   e.preventDefault(); // Prevent default behavior for drag events
+  //   console.log(imgSrc);
 
-    // Set the dragged image source directly
-    e.dataTransfer.setData("text/plain", imgSrc);
-  };
+  //   // Set the dragged image source directly
+  //   e.dataTransfer.setData("text/plain", imgSrc);
+  // };
 
   const imagesHeader = [
     {
@@ -61,11 +61,11 @@ const MainCard = () => {
                   src={image.name}
                   alt={image.description} // Improved alt text
                   draggable="true"
-                  onDragStart={(e) => handleDragStart(e, image.name)}
+                  // onDragStart={(e) => handleDragStart(e, image.name)}
                   className="w-full h-auto" // Add class for responsive image
                 />
                 <div className="ml-5 text-white absolute bottom-11">
-                  <h2 className="text-3xl font-semibold">
+                  <h2 className="text-2xl md:text-3xl font-semibold">
                     {image.description}
                   </h2>
                   {/* <h4>{image.caption}</h4> */}

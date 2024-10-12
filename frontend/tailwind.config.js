@@ -2,9 +2,10 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx,css}",
-    "./public/**/*.{jpg,png,jpeg}",
+    "./src/**/*.{js,ts,jsx,tsx,css,svg}",
+    "./public/**/*.{jpg,png,jpeg,svg}",
   ],
+
   theme: {
     extend: {},
   },
